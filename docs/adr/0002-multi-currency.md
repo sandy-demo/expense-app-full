@@ -131,14 +131,19 @@ perubahan terfokus dan tetap di branch/draft PR sampai gate terkait lulus.
 
 ## Kriteria tes penerimaan
 
-- **IDR:** kurs 1:1 mempertahankan nilai bulat; nilai tepat di bawah
-  Rp1.000.000 hanya memerlukan Manager, sedangkan tepat Rp1.000.000 dan di
-  atasnya memerlukan Manager lalu Finance.
-- **USD:** nominal sen memakai fixture USD, menghasilkan `amountIdr` integer
-  dengan aturan half-up; kasus pecahan tepat setengah dan nilai di sekitar
-  ambang Rp1.000.000 menguji pembulatan serta routing approval.
-- **SGD:** nominal sen memakai fixture SGD dan diuji dengan pola konversi,
-  pembulatan, serta ambang yang sama.
+- **Unit test pembulatan:** gunakan kurs sintetis khusus tes, terpisah dari
+  fixture capstone: 1 sen × Rp15.550 per unit ÷ 100 = Rp155,5, yang dibulatkan
+  half-up menjadi Rp156. Fixture ini hanya membuktikan perilaku pembulatan dan
+  tidak mengubah kurs IDR/USD/SGD capstone.
+- **IDR:** kurs fixture 1:1 mempertahankan nilai bulat. Nilai tepat di bawah
+  Rp1.000.000 hanya memerlukan Manager; tepat Rp1.000.000 dan di atasnya
+  memerlukan Manager lalu Finance.
+- **USD:** dengan fixture tetap Rp15.000 per USD, uji USD 66,66 → Rp999.900
+  (Manager) dan USD 66,67 → Rp1.000.050 (Manager lalu Finance).
+- **SGD:** dengan fixture tetap Rp11.000 per SGD, uji SGD 90,90 → Rp999.900
+  (Manager) dan SGD 90,91 → Rp1.000.010 (Manager lalu Finance).
+- Semua angka pada contoh tes merupakan data fiktif, bukan kurs aktual. Uji
+  tepat Rp1.000.000 melalui IDR, bukan dengan mengubah fixture capstone.
 - **Semua mata uang:** mata uang tak dikenal, nol/negatif, presisi berlebih,
   nilai yang melampaui rentang aman, atau input non-integer ditolak pada batas
   API; tidak ada floating-point drift.
